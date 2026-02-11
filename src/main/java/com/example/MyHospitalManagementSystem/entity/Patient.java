@@ -14,9 +14,11 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@ToString
+@ToString(exclude = {"appointments"})
 @Getter
 @Setter
 @Table(
@@ -55,6 +57,15 @@ public class Patient {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,name = "blood_group")
     private BloodGroup bloodGroup;
+
+    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    private Insurance insurance;
+
+    @OneToMany(mappedBy = "patient",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true)
+    private List<Appointment> appointments = new ArrayList<>();
+
 
 
 }
