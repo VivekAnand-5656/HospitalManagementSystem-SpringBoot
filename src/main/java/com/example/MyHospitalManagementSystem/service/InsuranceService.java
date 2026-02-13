@@ -1,6 +1,7 @@
 package com.example.MyHospitalManagementSystem.service;
 
 
+import com.example.MyHospitalManagementSystem.dto.PatientDTO;
 import com.example.MyHospitalManagementSystem.entity.Insurance;
 import com.example.MyHospitalManagementSystem.entity.Patient;
 import com.example.MyHospitalManagementSystem.repository.InsuranceRepository;
@@ -18,13 +19,13 @@ public class InsuranceService {
     private final PatientRepository patientRepository;
 
     @Transactional
-    public Patient assignInsuranceToPatient(Insurance insurance, Long patientId){
+    public PatientDTO assignInsuranceToPatient(Insurance insurance, Long patientId){
         Patient patient = patientRepository.findById(patientId).orElseThrow(()-> new EntityNotFoundException("Patient no found with this id"));
 
         patient.setInsurance(insurance);
         insurance.setPatient(patient);
         insuranceRepository.save(insurance);
 
-        return patient;
+        return new PatientDTO(patient);
     }
 }

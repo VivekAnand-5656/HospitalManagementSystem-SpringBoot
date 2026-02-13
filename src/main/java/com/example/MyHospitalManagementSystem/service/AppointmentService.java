@@ -1,5 +1,6 @@
 package com.example.MyHospitalManagementSystem.service;
 
+import com.example.MyHospitalManagementSystem.dto.AppointmentDTO;
 import com.example.MyHospitalManagementSystem.entity.Appointment;
 import com.example.MyHospitalManagementSystem.entity.Doctor;
 import com.example.MyHospitalManagementSystem.entity.Patient;
@@ -10,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,7 +22,7 @@ public class AppointmentService {
     private final PatientRepository patientRepository;
 
     @Transactional
-    public List<Appointment> createNewAppoinment(List<Appointment> appointments, Long doctorId, Long patientId){
+    public List<AppointmentDTO> createNewAppoinment(List<Appointment> appointments, Long doctorId, Long patientId){
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
         Patient patient = patientRepository.findById(patientId).orElseThrow();
 
@@ -30,13 +32,14 @@ public class AppointmentService {
             appointment.setDoctor(doctor);
             patient.getAppointments().add(appointment);
         }
-
-        return appointmentRepository.saveAll(appointments);
+        List<Appointment> savedAppointmens = appointmentRepository.saveAll(appointments);
+        List<AppointmentDTO> appointmentDTOS =  new ArrayList<>();
+        for(Appointment appointment : savedAppointmens){
+            appointmentDTOS.add(new AppointmentDTO(appointment));
+        }
+        return appointmentDTOS;
 
     }
-    @Transactional
-    public void deleteAppointment(){
-         appointmentRepository.deleteAll();
-    }
+
 //    Deletion Pending
 }

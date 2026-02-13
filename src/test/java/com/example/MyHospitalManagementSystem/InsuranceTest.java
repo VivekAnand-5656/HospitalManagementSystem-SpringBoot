@@ -56,10 +56,6 @@ public class InsuranceTest {
         System.out.println("Appointment Saved : ");
 
     }
-    @Test
-    public void deleteAppointment(){
-        appointmentService.deleteAppointment();
-        System.out.println("Appointment Delete successfully");
-    }
+
 
 }
