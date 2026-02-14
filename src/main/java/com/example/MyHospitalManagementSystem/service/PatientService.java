@@ -19,28 +19,7 @@ import java.util.Optional;
 public class PatientService {
     private final PatientRepository patientRepository;
 
-    @Transactional
-    public List<PatientDTO> getAllStudents(){
-        List<Patient> patientList = patientRepository.findAll();
-        List<PatientDTO> patientDTOS = new ArrayList<>();
-        for(Patient patient : patientList){
-            patientDTOS.add(new PatientDTO(patient));
-        }
-        return patientDTOS;
-    }
 
-    @Transactional
-    public PatientDTO getPatientById(Long id){
-        Patient p1 = patientRepository.findById(id).orElseThrow(()-> new RuntimeException("Patient not found"));
-
-        return new  PatientDTO(p1);
-    }
-    @Transactional
-    public PatientDTO getPatientByName(String name){
-        Patient patient = patientRepository.findPatientByName(name);
-        return new PatientDTO(patient);
-
-    }
 //    -------- Create Patient ------
     public PatientDTO createPatient(PatientDTO dto){
         Patient patient = new Patient();
@@ -50,6 +29,7 @@ public class PatientService {
         patient.setGender(dto.getGender());
         patient.setBloodGroup(dto.getBloodGroup());
         patient.setCreatedAt(LocalDateTime.now());
+
 
         Patient savePatient = patientRepository.save(patient);
         return new PatientDTO(savePatient);
@@ -70,12 +50,12 @@ public class PatientService {
     }
 
 //    ------ Delete By Id -----
-    @Transactional
-    public PatientDTO deletePatientById(Long id){
-        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
-        patientRepository.delete(patient);
-
-        return new PatientDTO(patient);
-    }
+//    @Transactional
+//    public PatientDTO deletePatientById(Long id){
+//        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
+//        patientRepository.delete(patient);
+//
+//        return new PatientDTO(patient);
+//    }
 
 }

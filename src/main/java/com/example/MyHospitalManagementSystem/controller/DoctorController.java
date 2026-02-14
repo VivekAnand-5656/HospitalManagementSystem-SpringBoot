@@ -20,17 +20,11 @@ public class DoctorController {
     private final DoctorRepository doctorRepository;
     private final DoctorService doctorService;
 
-    @GetMapping
-    public ResponseEntity<List<DoctorDTO>> getallDoctors(){
-        return ResponseEntity.ok(doctorService.doctorList());
-    }
+
 
     @GetMapping("id/{id}")
     public ResponseEntity<DoctorDTO> getByIdDoctor(@PathVariable Long id){
         return ResponseEntity.ok(doctorService.getByIdDoctor(id));
     }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<DoctorDTO> getDoctorByName(@PathVariable String name){
-        return ResponseEntity.ok(doctorService.getDoctorByName(name));
-    }
+
 }

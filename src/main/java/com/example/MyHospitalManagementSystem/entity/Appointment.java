@@ -1,5 +1,7 @@
 package com.example.MyHospitalManagementSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,9 +28,11 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "patient_id",nullable = false)
+//    @JsonBackReference
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false)
+    @JsonIgnore
     private Doctor doctor;
 }

@@ -2,6 +2,8 @@ package com.example.MyHospitalManagementSystem.entity;
 
 import com.example.MyHospitalManagementSystem.enums.BloodGroup;
 import com.example.MyHospitalManagementSystem.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -58,12 +60,15 @@ public class Patient {
     @Column(nullable = false,name = "blood_group")
     private BloodGroup bloodGroup;
 
-    @OneToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToOne(mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonBackReference
     private Insurance insurance;
+
 
     @OneToMany(mappedBy = "patient",
     cascade = CascadeType.ALL,
     orphanRemoval = true)
+    @JsonIgnore
     private List<Appointment> appointments = new ArrayList<>();
 
 

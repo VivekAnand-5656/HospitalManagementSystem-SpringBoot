@@ -7,12 +7,12 @@ import com.example.MyHospitalManagementSystem.entity.Patient;
 import com.example.MyHospitalManagementSystem.repository.AppointmentRepository;
 import com.example.MyHospitalManagementSystem.repository.DoctorRepository;
 import com.example.MyHospitalManagementSystem.repository.PatientRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.MapsId;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,25 +21,41 @@ public class AppointmentService {
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
 
+//    -------------- Creation -----------
     @Transactional
-    public List<AppointmentDTO> createNewAppoinment(List<Appointment> appointments, Long doctorId, Long patientId){
-        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow();
-        Patient patient = patientRepository.findById(patientId).orElseThrow();
+    public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO){
+        Patient patient = patientRepository.findById(appointmentDTO.getPatientId()).orElseThrow(()->new EntityNotFoundException("Patient is not found"));
+        Doctor doctor = doctorRepository.findById(appointmentDTO.getDoctorId()).orElseThrow(()->new EntityNotFoundException("Doctor is not available"));
 
-        for(Appointment appointment : appointments){
-            if(appointment.getId() != null) throw new IllegalArgumentException("Appointment should not have id");
-            appointment.setPatient(patient);
-            appointment.setDoctor(doctor);
-            patient.getAppointments().add(appointment);
-        }
-        List<Appointment> savedAppointmens = appointmentRepository.saveAll(appointments);
-        List<AppointmentDTO> appointmentDTOS =  new ArrayList<>();
-        for(Appointment appointment : savedAppointmens){
-            appointmentDTOS.add(new AppointmentDTO(appointment));
-        }
-        return appointmentDTOS;
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentTime(appointmentDTO.getAppointmentTime());
+        appointment.setReason(appointmentDTO.getReason());
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
 
+        Appointment saveAppointment = appointmentRepository.save(appointment);
+
+        AppointmentDTO responseDto = new AppointmentDTO();
+        responseDto.setId(saveAppointment.getId());
+        responseDto.setAppointmentTime(saveAppointment.getAppointmentTime());
+        responseDto.setReason(saveAppointment.getReason());
+        responseDto.setPatientId(saveAppointment.getPatient().getId());
+        responseDto.setDoctorId(saveAppointment.getDoctor().getId());
+
+        return responseDto;
     }
 
 //    Deletion Pending
+
+    @Transactional
+    public void deleteAppointmentById(Long id){
+        Appointment appointment = appointmentRepository.findById(id).orElseThrow(()->new EntityNotFoundException("Appoint not exists"));
+        appointmentRepository.delete(appointment);
+        System.out.println("Appointment Deleted Successfully");
+
+    }
+
+//    --- Getting ---
+
+
 }

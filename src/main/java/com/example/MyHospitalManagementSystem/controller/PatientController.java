@@ -21,21 +21,6 @@ public class PatientController {
     private final PatientRepository patientRepository;
     private final PatientService patientService;
 
-    @GetMapping
-    public ResponseEntity<List<PatientDTO>> getAllPatients(){
-        return ResponseEntity.ok(patientService.getAllStudents());
-    }
-
-//    ----- Find By Id ----
-    @GetMapping("/id/{id}")
-    public ResponseEntity<PatientDTO> findByIDPatient(@PathVariable Long id){
-        return ResponseEntity.ok(patientService.getPatientById(id));
-    }
-
-    @GetMapping("/name/{name}")
-    public ResponseEntity<PatientDTO> getPatientByName(@PathVariable String name){
-        return ResponseEntity.ok(patientService.getPatientByName(name));
-    }
 //    ---- Create Patient -----
     @PostMapping
     public ResponseEntity<PatientDTO> createPatient(@RequestBody @Valid PatientDTO dto){
@@ -48,10 +33,5 @@ public class PatientController {
         return ResponseEntity.ok(patientService.updatePatientByName(request.getName(),request.getNewName()));
     }
 
-//    ------- Delete ----
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deletePatientById(@PathVariable Long id){
-        patientService.deletePatientById(id);
-        return ResponseEntity.ok("Patient Deleted Successfully :=> "+id);
-    }
+
 }

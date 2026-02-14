@@ -1,6 +1,7 @@
 package com.example.MyHospitalManagementSystem.service;
 
 
+import com.example.MyHospitalManagementSystem.dto.InsuranceDTO;
 import com.example.MyHospitalManagementSystem.dto.PatientDTO;
 import com.example.MyHospitalManagementSystem.entity.Insurance;
 import com.example.MyHospitalManagementSystem.entity.Patient;
@@ -12,6 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.action.internal.EntityActionVetoException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class InsuranceService {
@@ -19,13 +24,29 @@ public class InsuranceService {
     private final PatientRepository patientRepository;
 
     @Transactional
-    public PatientDTO assignInsuranceToPatient(Insurance insurance, Long patientId){
-        Patient patient = patientRepository.findById(patientId).orElseThrow(()-> new EntityNotFoundException("Patient no found with this id"));
+    public InsuranceDTO assignInsuranceToPatient(InsuranceDTO insuranceDTO){
+        if(insuranceDTO.getPatientId() == null){
+            throw new IllegalArgumentException("Patient id must not be null");
+        }
+        Patient patient = patientRepository.findById(insuranceDTO.getPatientId()).orElseThrow(()-> new EntityNotFoundException("Patient no found with this id"));
 
-        patient.setInsurance(insurance);
+        Insurance insurance = new Insurance();
+        insurance.setProvider(insuranceDTO.getProvider());
+        insurance.setCreatedAt(insuranceDTO.getCreatedAt());
+        insurance.setValidUntil(insuranceDTO.getValidUntil());
+        insurance.setPolicyNumber(insuranceDTO.getPolicyNumber());
         insurance.setPatient(patient);
-        insuranceRepository.save(insurance);
+        patient.setInsurance(insurance);
 
-        return new PatientDTO(patient);
+        Insurance saveInsurance = insuranceRepository.save(insurance);
+
+        InsuranceDTO responseDto = new InsuranceDTO();
+        responseDto.setProvider(saveInsurance.getProvider());
+        responseDto.setCreatedAt(LocalDateTime.now());
+        responseDto.setValidUntil(saveInsurance.getValidUntil());
+        responseDto.setPolicyNumber(saveInsurance.getPolicyNumber());
+        responseDto.setPatient(saveInsurance.getPatient());
+        return responseDto;
     }
+
 }

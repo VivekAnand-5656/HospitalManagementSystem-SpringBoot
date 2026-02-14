@@ -24,6 +24,7 @@ public class InsuranceDTO {
     private LocalDateTime createdAt;
 
     private Patient patient;
+    private Long patientId;
 //    -----------------------
     public InsuranceDTO(Insurance insurance){
         this.id = insurance.getId();
@@ -32,5 +33,7 @@ public class InsuranceDTO {
         this.validUntil = insurance.getValidUntil();
         this.createdAt = insurance.getCreatedAt();
         this.patient = insurance.getPatient();
+        this.patientId = insurance.getPatient().getId();
+
     }
 }

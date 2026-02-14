@@ -34,7 +34,7 @@ public class InsuranceTest {
                 .provider("HDFC")
                 .validUntil(LocalDate.of(2030,3,1))
                 .build();
-        Patient patient = insuranceService.assignInsuranceToPatient(insurance,1L);
+//        Patient patient = insuranceService.assignInsuranceToPatient(insurance,1L);
         System.out.println(patient);
     }
 

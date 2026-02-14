@@ -1,5 +1,7 @@
 package com.example.MyHospitalManagementSystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -34,6 +36,7 @@ public class Doctor {
     private Set<Department> departments = new HashSet<>();
 
     @OneToMany(mappedBy = "doctor")
+    @JsonIgnore
     private List<Appointment> appointments = new ArrayList<>();
 
 
