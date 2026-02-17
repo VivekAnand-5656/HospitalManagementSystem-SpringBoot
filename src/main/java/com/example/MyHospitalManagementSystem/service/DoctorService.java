@@ -25,15 +25,15 @@ public class DoctorService {
 //        List<Appointment> appointments = appointmentRepository.findAll();
 //    }
 
-//    @Transactional
-//    public List<DoctorDTO> doctorList(){
-//        List<Doctor> doctor = doctorRepository.findAll();
-//        List<DoctorDTO> doctorDTOS = new ArrayList<>();
-//        for(Doctor doctor1 : doctor){
-//            doctorDTOS.add(new DoctorDTO(doctor1));
-//        }
-//        return doctorDTOS;
-//    }
+    @Transactional
+    public List<DoctorDTO> doctorList(){
+        List<Doctor> doctor = doctorRepository.findAll();
+        List<DoctorDTO> doctorDTOS = new ArrayList<>();
+        for(Doctor doctor1 : doctor){
+            doctorDTOS.add(new DoctorDTO(doctor1));
+        }
+        return doctorDTOS;
+    }
 
     @Transactional
     public DoctorDTO getByIdDoctor(Long id){

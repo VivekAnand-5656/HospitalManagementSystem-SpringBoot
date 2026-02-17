@@ -50,12 +50,12 @@ public class PatientService {
     }
 
 //    ------ Delete By Id -----
-//    @Transactional
-//    public PatientDTO deletePatientById(Long id){
-//        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
-//        patientRepository.delete(patient);
-//
-//        return new PatientDTO(patient);
-//    }
+    @Transactional
+    public PatientDTO findById(Long id){
+        Patient patient = patientRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Patient not found"));
+
+
+        return new PatientDTO(patient);
+    }
 
 }

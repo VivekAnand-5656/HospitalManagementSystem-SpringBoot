@@ -33,5 +33,10 @@ public class PatientController {
         return ResponseEntity.ok(patientService.updatePatientByName(request.getName(),request.getNewName()));
     }
 
+    @GetMapping("patient/id/{id}")
+    public ResponseEntity<PatientDTO> findPatientById(@PathVariable Long id){
+        return ResponseEntity.ok(patientService.findById(id));
+    }
+
 
 }
