@@ -1,5 +1,6 @@
 package com.example.MyHospitalManagementSystem.entity;
 
+import com.example.MyHospitalManagementSystem.enums.ProviderType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,12 +21,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @JoinColumn(unique = true,nullable = false)
     @Column(nullable = false,unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
