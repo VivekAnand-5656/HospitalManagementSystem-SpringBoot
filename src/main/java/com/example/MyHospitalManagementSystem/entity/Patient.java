@@ -36,6 +36,10 @@ public class Patient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
+    @MapsId
+    private User user;
+
     @NotBlank(message = "Name is Required")
     @Column(length = 40)
     private String name;
@@ -63,7 +67,6 @@ public class Patient {
     @OneToOne(mappedBy = "patient", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonBackReference
     private Insurance insurance;
-
 
     @OneToMany(mappedBy = "patient",
     cascade = CascadeType.ALL,

@@ -56,8 +56,8 @@ public class AuthUtill {
 
     public String  determineProviderIdFromAuth2User(OAuth2User auth2User,String registrationId){
         String providerID = switch (registrationId.toLowerCase()){
-            case "google"-> OAuth2User.getAttribute("sub");
-            case "github"-> OAuth2User.getAttribute("id").toString();
+            case "google"-> auth2User.getAttribute("sub");
+            case "github"-> auth2User.getAttribute("id").toString();
             default -> {
                 log.error("Unsupported OAuth2 provider : {}",registrationId);
                 throw new IllegalArgumentException("Unsupported OAuth2 provider");
@@ -69,6 +69,18 @@ public class AuthUtill {
             throw new IllegalArgumentException("Unable to determined providerId for OAuth2 login");
         }
         return providerID;
+    }
+
+    public String determineUsernameFromAuth2User(OAuth2User oAuth2User,String registrationId,String providerid){
+        String email = oAuth2User.getAttribute("email");
+        if(email != null && !email.isBlank()){
+            return email;
+        }
+        return switch (registrationId.toLowerCase()){
+            case "google"-> oAuth2User.getAttribute("sub");
+            case "github"-> oAuth2User.getAttribute("login");
+            default ->providerid;
+        };
     }
 
 
