@@ -25,6 +25,7 @@ import static com.example.MyHospitalManagementSystem.enums.PermissionType.*;
 @EnableMethodSecurity
 @EnableWebSecurity
 public class WebSecurityConfig {
+
     private final CustomeUserDetailsService customeUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JWTAuthFilter jwtAuthFilter;
@@ -32,52 +33,52 @@ public class WebSecurityConfig {
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                                .requestMatchers(
-                                        "/public/**",
-                                        "/auth/**",
-                                        "/v3/api-docs/**",
-                                        "/swagger-ui/**",
-                                        "/swagger-ui.html"
-                                ).permitAll()
-                                .requestMatchers(HttpMethod.DELETE,"/admin/**")
-                        .hasAnyAuthority(APPOINTMENT_DELETE.name(),
-                                USER_MANAGE.name())
-//                        .hasRole(RoleType.ADMIN.name())
-                                .requestMatchers("/doctors/**").hasAnyRole(RoleType.DOCTOR.name(),RoleType.ADMIN.name())
-                                .requestMatchers("/patients/**").hasAnyRole(RoleType.PATIENT.name(),RoleType.ADMIN.name())
-                                .anyRequest().authenticated()
-                ).userDetailsService(customeUserDetailsService)
+                        // Public endpoints
+                        .requestMatchers(
+                                "/public/**",
+                                "/auth/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
+                        // Allow preflight OPTIONS requests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // Admin DELETE endpoints with authority
+                        .requestMatchers(HttpMethod.DELETE, "/admin/**")
+                        .hasAnyAuthority(APPOINTMENT_DELETE.name(), USER_MANAGE.name())
+                        // Role-based access
+                        .requestMatchers("/doctors/**").hasAnyRole(RoleType.DOCTOR.name(), RoleType.ADMIN.name())
+                        .requestMatchers("/patients/**").hasAnyRole(RoleType.PATIENT.name(), RoleType.ADMIN.name())
+                        // All other requests require authentication
+                        .anyRequest().authenticated()
+                )
+                .userDetailsService(customeUserDetailsService)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oAuth2->oAuth2
-                        .failureHandler(
-                        (request, response, exception) -> {
-                            log.error("oAuth2 Error: {}",exception.getMessage());
-                            handlerExceptionResolver.resolveException(request,response,null,exception);
+                // OAuth2 login config
+                .oauth2Login(oAuth2 -> oAuth2
+                        .failureHandler((request, response, exception) -> {
+                            log.error("oAuth2 Error: {}", exception.getMessage());
+                            handlerExceptionResolver.resolveException(request, response, null, exception);
                         })
                         .successHandler(oAuthSeccessHandler)
-                ).exceptionHandling(exceptionHandlingConfiger ->
-                        exceptionHandlingConfiger.accessDeniedHandler(
-                                (request, response, accessDeniedException) -> {
-                                    handlerExceptionResolver.resolveException(request,response,null, accessDeniedException);
-                                }
-                        ));
-
+                )
+                // Exception handling
+                .exceptionHandling(ex -> ex.accessDeniedHandler(
+                        (request, response, accessDeniedException) -> {
+                            handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
+                        }
+                ));
 
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
-            return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
-
-
-
-
 }

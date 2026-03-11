@@ -1,5 +1,6 @@
 package com.example.MyHospitalManagementSystem.controller;
 
+import com.example.MyHospitalManagementSystem.dto.AppointmentsResponseDTO;
 import com.example.MyHospitalManagementSystem.dto.DoctorDTO;
 import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileRequestDTO;
 import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileResponseDTO;
@@ -7,13 +8,14 @@ import com.example.MyHospitalManagementSystem.repository.DoctorRepository;
 import com.example.MyHospitalManagementSystem.service.DoctorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
 import java.util.List;
 import java.util.Set;
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/doctors")
@@ -26,13 +28,13 @@ public class DoctorController {
     }
 
 //    ==== Update Profile ====
-    @PostMapping("/update-profile")
+    @PostMapping("/doctor/update-profile")
     public ResponseEntity<UpdateDoctorProfileResponseDTO> updateDoctorProfile(
             @Valid @RequestBody UpdateDoctorProfileRequestDTO requestDTO ){
         return ResponseEntity.ok(doctorService.updateDoctorProfile(requestDTO));
     }
 //    ------- Get All Doctors --------
-    @GetMapping("/allDoctors")
+    @GetMapping("/doctor/allDoctors")
     public ResponseEntity<List<DoctorDTO>> getAllDoctor(){
         return ResponseEntity.ok(doctorService.doctorList());
     }
@@ -41,5 +43,27 @@ public class DoctorController {
     public ResponseEntity<Set<DoctorDTO>> getDoctorByDepartment(@PathVariable String department){
         return ResponseEntity.ok(doctorService.getDoctorByDepartments(department));
     }
+//    -------- totals ---
+//    --------- Doctor Num ---------
+    @GetMapping("/doctor/allDoctorNum")
+    public ResponseEntity<Long> allDoctorNum(){
+        return ResponseEntity.ok(doctorService.totalDoctorNum());
+    }
+//    ---------- Patients Num ----
+    @GetMapping("/doctor/allPatientNum")
+    public ResponseEntity<Long> allPatientNum(){
+        return ResponseEntity.ok(doctorService.totalPatientNum());
+    }
+    //    ---------- Patients Num ----
+    @GetMapping("/doctor/allAppointmentNum")
+    public ResponseEntity<Long> allAppointmentsNum(){
+        return ResponseEntity.ok(doctorService.totalAppointmentsNum());
+    }
+//    ------------ All Appointments ----------
+    @GetMapping("/doctor/allAppointments")
+    public ResponseEntity<List<AppointmentsResponseDTO>> getAllAppointments(){
+        return ResponseEntity.ok(doctorService.getAllAppointments());
+    }
+
 
 }

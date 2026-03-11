@@ -1,12 +1,15 @@
 package com.example.MyHospitalManagementSystem.service;
 
+import com.example.MyHospitalManagementSystem.dto.AppointmentsResponseDTO;
 import com.example.MyHospitalManagementSystem.dto.DoctorDTO;
 import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileRequestDTO;
 import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileResponseDTO;
+import com.example.MyHospitalManagementSystem.entity.Appointment;
 import com.example.MyHospitalManagementSystem.enums.Department;
 import com.example.MyHospitalManagementSystem.entity.Doctor;
 import com.example.MyHospitalManagementSystem.repository.AppointmentRepository;
 import com.example.MyHospitalManagementSystem.repository.DoctorRepository;
+import com.example.MyHospitalManagementSystem.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,11 +27,23 @@ import java.util.stream.Collectors;
 public class DoctorService {
     private final DoctorRepository doctorRepository;
     private final AppointmentRepository appointmentRepository;
+    private final PatientRepository patientRepository;
 //    ----- View Own Appointments ---------
 //    @Transactional
 //    public List<AppointmentRequestDTO> getMyAppointments(Long id){
 //        List<Appointment> appointments = appointmentRepository.findAll();
 //    }
+//------------------------ All appointments -------
+    @Transactional
+    public List<AppointmentsResponseDTO> getAllAppointments(){
+        List<Appointment> appointmentList = appointmentRepository.findAll();
+        List<AppointmentsResponseDTO> appointmentDto = new ArrayList<>();
+        for(Appointment appointment : appointmentList){
+            appointmentDto.add(new AppointmentsResponseDTO(appointment));
+        }
+        return appointmentDto;
+    }
+//    --------------------------------------------------
 
     @Transactional
     public List<DoctorDTO> doctorList(){
@@ -89,5 +104,21 @@ public class DoctorService {
         }
         return doctorDTOS;
     }
+// -------------------- Total Doctors Count ----------
 
+    public Long totalDoctorNum(){
+        long total = doctorRepository.count();
+        return total;
+    }
+
+//    -------------- Total Patien Num -----------
+    public Long totalPatientNum(){
+        long total = patientRepository.count();
+        return total;
+    }
+//    ----------- Total Appointments Num ---------
+    public Long totalAppointmentsNum(){
+        long total = appointmentRepository.count();
+        return total;
+    }
 }
