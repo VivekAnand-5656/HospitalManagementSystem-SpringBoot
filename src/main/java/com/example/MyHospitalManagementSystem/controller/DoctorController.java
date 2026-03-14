@@ -1,9 +1,7 @@
 package com.example.MyHospitalManagementSystem.controller;
 
-import com.example.MyHospitalManagementSystem.dto.AppointmentsResponseDTO;
-import com.example.MyHospitalManagementSystem.dto.DoctorDTO;
-import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileRequestDTO;
-import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileResponseDTO;
+import com.example.MyHospitalManagementSystem.dto.*;
+import com.example.MyHospitalManagementSystem.entity.Patient;
 import com.example.MyHospitalManagementSystem.repository.DoctorRepository;
 import com.example.MyHospitalManagementSystem.service.DoctorService;
 import jakarta.validation.Valid;
@@ -54,7 +52,7 @@ public class DoctorController {
     public ResponseEntity<Long> allPatientNum(){
         return ResponseEntity.ok(doctorService.totalPatientNum());
     }
-    //    ---------- Patients Num ----
+    //    ---------- Appointments Num ----
     @GetMapping("/doctor/allAppointmentNum")
     public ResponseEntity<Long> allAppointmentsNum(){
         return ResponseEntity.ok(doctorService.totalAppointmentsNum());
@@ -63,6 +61,11 @@ public class DoctorController {
     @GetMapping("/doctor/allAppointments")
     public ResponseEntity<List<AppointmentsResponseDTO>> getAllAppointments(){
         return ResponseEntity.ok(doctorService.getAllAppointments());
+    }
+//    ----------- All Patients --------
+    @GetMapping("/doctor/allPatients")
+    public ResponseEntity<List<PatientDTO>> allPatients(){
+        return ResponseEntity.ok(doctorService.allPatients());
     }
 
 

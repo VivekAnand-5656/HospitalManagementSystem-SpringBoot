@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -35,5 +34,7 @@ public class AppointmentRequestDTO {
     private String reason;
 
 
+    public AppointmentRequestDTO(Appointment appointment) {
 
+    }
 }

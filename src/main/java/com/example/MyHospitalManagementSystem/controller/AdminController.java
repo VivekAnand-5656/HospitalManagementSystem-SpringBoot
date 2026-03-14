@@ -23,7 +23,7 @@ public class AdminController {
 
 //    ------ Appoiintments
     @GetMapping("/appointments")
-    public ResponseEntity<List<AppointmentRequestDTO>> getAllAppointments(){
+    public ResponseEntity<List<AppointmentsResponseDTO>> getAllAppointments(){
         return ResponseEntity.ok(adminService.getAllAppointments());
     }
 //    ====== Total Appointments Count -======

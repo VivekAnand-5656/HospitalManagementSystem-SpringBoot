@@ -1,9 +1,6 @@
 package com.example.MyHospitalManagementSystem.service;
 
-import com.example.MyHospitalManagementSystem.dto.AppointmentRequestDTO;
-import com.example.MyHospitalManagementSystem.dto.DoctorDTO;
-import com.example.MyHospitalManagementSystem.dto.InsuranceDTO;
-import com.example.MyHospitalManagementSystem.dto.PatientDTO;
+import com.example.MyHospitalManagementSystem.dto.*;
 import com.example.MyHospitalManagementSystem.entity.*;
 import com.example.MyHospitalManagementSystem.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +20,7 @@ public class AdminService {
     private final InsuranceRepository insuranceRepository;
     private final UserRepository userRepository;
 
-//    ------ Doctor Functionality ----------
+//    ------------------------ Admin DashBoard ------------------------------------
 //    ------ Get All Doctors -----
     public List<DoctorDTO> getAllDoctors(){
         List<Doctor> doctorList = doctorRepository.findAll();
@@ -33,6 +30,27 @@ public class AdminService {
         }
         return doctorDTOS;
     }
+    //    ------- Get All Patients ---
+    public List<PatientDTO> getAllPatients(){
+        List<Patient> patientList = patientRepository.findAll();
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        for(Patient patient : patientList){
+            patientDTOS.add(new PatientDTO(patient));
+        }
+        return patientDTOS;
+    }
+    //    ----- Appointments ----
+    public List<AppointmentsResponseDTO> getAllAppointments(){
+        List<Appointment> appointmentList = appointmentRepository.findAll();
+        List<AppointmentsResponseDTO> appointmentDTOS = new ArrayList<>();
+
+        for(Appointment appointment : appointmentList){
+            appointmentDTOS.add(new AppointmentsResponseDTO(appointment));
+        }
+        return appointmentDTOS;
+    }
+//    ----------------------------------- End -----------------------------------------------
+//    ----------------------- Doctor Management ----------------
 //    ----------- Add Doctor --------
     @Transactional
     public DoctorDTO createDoctor(Doctor doctor){
@@ -41,11 +59,18 @@ public class AdminService {
         newDoctor.setEmail(doctor.getEmail());
         newDoctor.setSpecialization(doctor.getSpecialization());
         newDoctor.setDepartments(doctor.getDepartments());
-
         Doctor saveDoctor = doctorRepository.save(newDoctor);
-
         return new DoctorDTO(saveDoctor);
     }
+//    --------- View Doctor By Id -----
+    public DoctorDTO  getDoctorById(Long id){
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(()->new RuntimeException("Doctor Not Found"));
+        return new DoctorDTO(doctor);
+    }
+//    --- Left Some Cplete Later
+//    --------------------------------- End ---------------------------
+
+
 //    -------------- Delete Doctor ------------
     @Transactional
     public void deleteDoctorById(Long id){
@@ -60,17 +85,7 @@ public class AdminService {
 
     }
 //    ----------- Patient Functionality -------------
-//    ------- Get All Patients ---
 
-    public List<PatientDTO> getAllPatients(){
-        List<Patient> patientList = patientRepository.findAll();
-        List<PatientDTO> patientDTOS = new ArrayList<>();
-
-        for(Patient patient : patientList){
-            patientDTOS.add(new PatientDTO(patient));
-        }
-        return patientDTOS;
-    }
     @Transactional
     public PatientDTO getPatientById(Long id){
         Patient p1 = patientRepository.findById(id).orElseThrow(()-> new RuntimeException("Patient not found"));
@@ -97,16 +112,7 @@ public class AdminService {
         return totalPatient;
     }
 
-//    ----- Appointments ----
-     public List<AppointmentRequestDTO> getAllAppointments(){
-        List<Appointment> appointmentList = appointmentRepository.findAll();
-        List<AppointmentRequestDTO> appointmentDTOS = new ArrayList<>();
 
-        for(Appointment appointment : appointmentList){
-//            appointmentDTOS.add(new AppointmentRequestDTO(appointment));
-        }
-        return appointmentDTOS;
-     }
 //     ------- Delete Appointments ------
     @Transactional
     public void deleteAppointment(Long id){

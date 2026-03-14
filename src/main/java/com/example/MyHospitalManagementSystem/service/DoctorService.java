@@ -1,10 +1,8 @@
 package com.example.MyHospitalManagementSystem.service;
 
-import com.example.MyHospitalManagementSystem.dto.AppointmentsResponseDTO;
-import com.example.MyHospitalManagementSystem.dto.DoctorDTO;
-import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileRequestDTO;
-import com.example.MyHospitalManagementSystem.dto.UpdateDoctorProfileResponseDTO;
+import com.example.MyHospitalManagementSystem.dto.*;
 import com.example.MyHospitalManagementSystem.entity.Appointment;
+import com.example.MyHospitalManagementSystem.entity.Patient;
 import com.example.MyHospitalManagementSystem.enums.Department;
 import com.example.MyHospitalManagementSystem.entity.Doctor;
 import com.example.MyHospitalManagementSystem.repository.AppointmentRepository;
@@ -120,5 +118,14 @@ public class DoctorService {
     public Long totalAppointmentsNum(){
         long total = appointmentRepository.count();
         return total;
+    }
+//    --------- Tital Patients ---------
+    public List<PatientDTO> allPatients(){
+        List<Patient> patients = patientRepository.findAll();
+        List<PatientDTO> patientDTOList = new ArrayList<>();
+        for(Patient patient : patients){
+            patientDTOList.add(new PatientDTO(patient));
+        }
+        return patientDTOList;
     }
 }
